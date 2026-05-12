@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hidrostation — Propostas</title>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:      #f2f5f8;
+    --white:   #ffffff;
+    --navy:    #0d2d4a;
+    --navy2:   #163d62;
+    --blue:    #1a6faa;
+    --cyan:    #00a8cc;
+    --green:   #2eaa72;
+    --red:     #e53e3e;
+    --border:  #dde4ec;
+    --text:    #1a2e40;
+    --muted:   #5f7a93;
+    --light:   #eaf0f6;
+    --shadow:  0 2px 16px rgba(13,45,74,0.08);
+    --shadow-lg: 0 8px 40px rgba(13,45,74,0.13);
+
+    /* configurador colors */
+    --c-pluviais:  #1a6faa;
+    --c-suds:      #00a8cc;
+    --c-etar:      #2eaa72;
+    --c-gorduras:  #d97706;
+    --c-hidro:     #7c3aed;
+    --c-elevat:    #e05a2b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Open Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  /* ─── TOPBAR ─── */
+  .topbar {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--navy);
+    height: 62px;
+    display: flex; align-items: center;
+    padding: 0 32px; gap: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  }
+  .topbar-logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+  }
+  .topbar-logo img {
+    height: 28px; filter: brightness(0) invert(1); display: block;
+  }
+  .topbar-logo-text {
+    font-family: 'Raleway', sans-serif; font-weight: 800;
+    font-size: 17px; color: white;
+  }
+  .topbar-divider { width: 1px; height: 24px; background: rgba(255,255,255,0.15); }
+  .topbar-nav { display: flex; gap: 2px; flex: 1; }
+  .topbar-nav a {
+    padding: 6px 14px; border-radius: 7px;
+    font-size: 13.5px; font-weight: 500;
+    color: rgba(255,255,255,0.6); text-decoration: none;
+    transition: all 0.15s;
+  }
+  .topbar-nav a:hover { color: white; background: rgba(255,255,255,0.08); }
+  .topbar-nav a.active { color: white; background: rgba(255,255,255,0.12); }
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .user-chip {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 20px; padding: 4px 12px 4px 4px;
+  }
+  .user-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--cyan);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Raleway', sans-serif; font-size: 11px; font-weight: 700;
+    color: var(--navy);
+  }
+  .user-name { font-size: 13px; color: rgba(255,255,255,0.8); }
+  @media (max-width: 768px) {
+    .topbar { padding: 0 16px; }
+    .topbar-nav { display: none; }
+  }
+
+  /* ─── PAGE HEADER ─── */
+  .page-header {
+    background: var(--navy);
+    padding: 28px 32px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .page-header-inner {
+    max-width: 1200px; margin: 0 auto;
+  }
+  .page-title {
+    font-family: 'Raleway', sans-serif;
+    font-size: 22px; font-weight: 800;
+    color: white; margin-bottom: 20px;
+    letter-spacing: -0.3px;
+  }
+  .page-title span { color: #5dd3f0; }
+
+  /* ─── TABS ─── */
+  .tabs { display: flex; gap: 0; }
+  .tab {
+    padding: 10px 20px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 13px; font-weight: 600;
+    color: rgba(255,255,255,0.45);
+    cursor: pointer; border-bottom: 2px solid transparent;
+    transition: all 0.15s; user-select: none;
+  }
+  .tab:hover { color: rgba(255,255,255,0.75); }
+  .tab.active { color: white; border-bottom-color: var(--cyan); }
+
+  /* ─── MAIN ─── */
+  .main {
+    max-width: 1200px; margin: 0 auto;
+    padding: 28px 32px 60px;
+  }
+  @media (max-width: 768px) { .main { padding: 16px 16px 40px; } }
+
+  /* ─── FILTERS BAR ─── */
+  .filters {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: flex; flex-wrap: wrap; gap: 12px;
+    align-items: flex-end;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+  }
+  .filter-group { display: flex; flex-direction: column; gap: 5px; }
+  .filter-group label {
+    font-size: 10.5px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.8px;
+    color: var(--muted);
+  }
+  .filter-group input,
+  .filter-group select {
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 13px; color: var(--text);
+    outline: none; transition: border-color 0.2s;
+    min-width: 160px;
+  }
+  .filter-group input:focus,
+  .filter-group select:focus { border-color: var(--blue); background: white; }
+
+  .filter-group.grow { flex: 1; min-width: 200px; }
+
+  .filter-actions { display: flex; gap: 8px; align-items: flex-end; margin-left: auto; }
+
+  .btn {
+    padding: 8px 16px; border-radius: 8px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 13px; font-weight: 700;
+    cursor: pointer; border: none;
+    transition: all 0.15s; white-space: nowrap;
+  }
+  .btn-primary { background: var(--navy); color: white; }
+  .btn-primary:hover { background: var(--blue); }
+  .btn-ghost {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--muted);
+  }
+  .btn-ghost:hover { border-color: var(--blue); color: var(--blue); }
+
+  /* ─── RESULTS BAR ─── */
+  .results-bar {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px; flex-wrap: wrap; gap: 8px;
+  }
+  .results-count {
+    font-size: 13px; color: var(--muted);
+  }
+  .results-count strong { color: var(--text); font-weight: 600; }
+
+  .sort-wrap { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+  .sort-wrap select {
+    border: 1.5px solid var(--border); border-radius: 7px;
+    padding: 5px 10px; font-size: 12.5px;
+    font-family: 'Open Sans', sans-serif;
+    background: white; color: var(--text);
+    outline: none; cursor: pointer;
+  }
+
+  /* ─── PROPOSTAS TABLE ─── */
+  .table-wrap {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    padding: 11px 16px;
+    background: var(--light);
+    border-bottom: 1px solid var(--border);
+    font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.9px;
+    color: var(--muted); text-align: left;
+    white-space: nowrap;
+    cursor: pointer; user-select: none;
+  }
+  thead th:hover { color: var(--navy); }
+  thead th.sorted { color: var(--navy); }
+  thead th .sort-icon { margin-left: 4px; opacity: 0.5; }
+  thead th.sorted .sort-icon { opacity: 1; }
+
+  tbody tr { transition: background 0.1s; }
+  tbody tr:hover td { background: var(--light); }
+  tbody td {
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px; vertical-align: middle;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+
+  /* ─── CELL COMPONENTS ─── */
+  .client-cell { display: flex; align-items: center; gap: 9px; }
+  .client-av {
+    width: 32px; height: 32px; border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Raleway', sans-serif; font-size: 11px; font-weight: 700;
+    color: white; flex-shrink: 0;
+  }
+  .client-name { font-weight: 600; color: var(--navy); font-size: 13px; }
+  .client-ref { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+  .cfg-tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 9px; border-radius: 6px;
+    font-size: 11.5px; font-weight: 600;
+    white-space: nowrap;
+  }
+  .cfg-dot { width: 5px; height: 5px; border-radius: 50%; }
+
+  .produto-cell { font-size: 13px; color: var(--text); }
+  .produto-ref { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+  .price-cell {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 700; font-size: 14px;
+    color: var(--green); white-space: nowrap;
+  }
+
+  .date-cell { color: var(--muted); font-size: 12.5px; white-space: nowrap; }
+  .date-today { color: var(--blue); font-weight: 600; }
+
+  .author-cell {
+    display: flex; align-items: center; gap: 7px;
+  }
+  .author-av {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--light); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Raleway', sans-serif; font-size: 10px; font-weight: 700;
+    color: var(--navy);
+  }
+  .author-name { font-size: 12.5px; color: var(--muted); }
+
+  .estado-badge {
+    padding: 3px 9px; border-radius: 20px;
+    font-size: 11px; font-weight: 600;
+    white-space: nowrap;
+  }
+  .estado-rascunho { background: rgba(95,122,147,0.1); color: var(--muted); }
+  .estado-pronta   { background: rgba(26,111,170,0.1); color: var(--blue); }
+  .estado-enviada  { background: rgba(46,170,114,0.1); color: var(--green); }
+  .estado-aceite   { background: rgba(46,170,114,0.18); color: #1a7a4a; }
+
+  .actions-cell { display: flex; gap: 6px; justify-content: flex-end; }
+  .btn-icon {
+    width: 30px; height: 30px; border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; cursor: pointer;
+    border: 1.5px solid var(--border);
+    background: white; transition: all 0.15s;
+    text-decoration: none;
+  }
+  .btn-icon:hover { border-color: var(--blue); background: var(--light); }
+  .btn-icon.danger:hover { border-color: var(--red); background: #fff5f5; }
+
+  /* ─── EMPTY STATE ─── */
+  .empty-state {
+    text-align: center; padding: 60px 20px;
+    color: var(--muted);
+  }
+  .empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
+  .empty-title { font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 16px; color: var(--text); margin-bottom: 6px; }
+  .empty-sub { font-size: 13px; }
+
+  /* ─── MODAL (Ver Proposta) ─── */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(13,45,74,0.55);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal {
+    background: white; border-radius: 16px;
+    width: 100%; max-width: 680px;
+    max-height: 90vh; overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+    transform: translateY(8px);
+    transition: transform 0.2s;
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+  .modal-header {
+    padding: 24px 28px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+  }
+  .modal-title { font-family: 'Raleway', sans-serif; font-size: 18px; font-weight: 800; color: var(--navy); }
+  .modal-sub { font-size: 13px; color: var(--muted); margin-top: 3px; }
+  .modal-close {
+    width: 32px; height: 32px; border-radius: 8px;
+    border: 1.5px solid var(--border); background: white;
+    cursor: pointer; font-size: 16px; color: var(--muted);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s; flex-shrink: 0;
+  }
+  .modal-close:hover { border-color: var(--red); color: var(--red); }
+  .modal-body { padding: 24px 28px; }
+  .modal-footer {
+    padding: 16px 28px;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .detail-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 16px; margin-bottom: 20px;
+  }
+  .detail-field label {
+    font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.7px;
+    color: var(--muted); display: block; margin-bottom: 4px;
+  }
+  .detail-field .val {
+    font-size: 14px; color: var(--text); font-weight: 500;
+  }
+
+  .config-block {
+    background: var(--light);
+    border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px;
+    margin-bottom: 16px;
+  }
+  .config-block-title {
+    font-family: 'Raleway', sans-serif;
+    font-size: 12px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px;
+    color: var(--muted); margin-bottom: 12px;
+  }
+  .config-row {
+    display: flex; justify-content: space-between;
+    padding: 6px 0; border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .config-row:last-child { border-bottom: none; }
+  .config-row .k { color: var(--muted); }
+  .config-row .v { font-weight: 600; color: var(--text); }
+
+  .notas-block {
+    background: rgba(26,111,170,0.04);
+    border: 1px solid rgba(26,111,170,0.15);
+    border-left: 3px solid var(--blue);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 14px; font-size: 13px;
+    color: var(--text); line-height: 1.6;
+  }
+
+  /* ─── PAGINATION ─── */
+  .pagination {
+    display: flex; align-items: center; justify-content: center;
+    gap: 6px; margin-top: 20px;
+  }
+  .page-btn {
+    min-width: 32px; height: 32px;
+    border-radius: 7px; border: 1.5px solid var(--border);
+    background: white; font-size: 13px; font-weight: 600;
+    color: var(--muted); cursor: pointer; transition: all 0.15s;
+    font-family: 'Raleway', sans-serif;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 8px;
+  }
+  .page-btn:hover { border-color: var(--blue); color: var(--blue); }
+  .page-btn.active { background: var(--navy); border-color: var(--navy); color: white; }
+  .page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .col-produto, .col-autor { display: none; }
+  }
+  @media (max-width: 600px) {
+    .col-estado { display: none; }
+    .filters { flex-direction: column; }
+    .filter-group input, .filter-group select { min-width: unset; width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── TOPBAR ─── -->
+<nav class="topbar">
+  <a href="index.html" class="topbar-logo">
+    <img src="https://hidrostation.pt/assets/logo.png" alt="Hidrostation"
+         onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span style=\'font-family:Raleway,sans-serif;font-weight:800;font-size:17px;color:white\'>Hidrostation</span>')">
+  </a>
+  <div class="topbar-divider"></div>
+  <div class="topbar-nav">
+    <a href="index.html">Configuradores</a>
+    <a href="propostas.html" class="active">Propostas</a>
+  </div>
+  <div class="topbar-right">
+    <div class="user-chip">
+      <div class="user-avatar">NS</div>
+      <span class="user-name">Nuno Sousa</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ─── PAGE HEADER + TABS ─── -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="page-title">Propostas <span>/ Todas</span></div>
+    <div class="tabs">
+      <div class="tab active" onclick="setTab(this,'todas')">Todas</div>
+      <div class="tab" onclick="setTab(this,'minhas')">As minhas</div>
+      <div class="tab" onclick="setTab(this,'enviadas')">Enviadas</div>
+      <div class="tab" onclick="setTab(this,'rascunhos')">Rascunhos</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── MAIN ─── -->
+<div class="main">
+
+  <!-- FILTROS -->
+  <div class="filters">
+    <div class="filter-group grow">
+      <label>Pesquisar cliente</label>
+      <input type="text" id="f-cliente" placeholder="Nome do cliente..." oninput="applyFilters()">
+    </div>
+    <div class="filter-group">
+      <label>Configurador</label>
+      <select id="f-cfg" onchange="applyFilters()">
+        <option value="">Todos</option>
+        <option value="Águas Pluviais">Águas Pluviais</option>
+        <option value="SUDS">SUDS</option>
+        <option value="ETAR">ETAR</option>
+        <option value="Sep. Gorduras">Sep. Gorduras</option>
+        <option value="Sep. Hidrocarbonetos">Sep. Hidrocarbonetos</option>
+        <option value="Est. Elevatórias">Est. Elevatórias</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Autor</label>
+      <select id="f-autor" onchange="applyFilters()">
+        <option value="">Todos</option>
+        <option value="RM">Raquel Moreira</option>
+        <option value="JA">José Afonso</option>
+        <option value="NS">Nuno Sousa</option>
+        <option value="TO">Técnico</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>De</label>
+      <input type="date" id="f-de" onchange="applyFilters()">
+    </div>
+    <div class="filter-group">
+      <label>Até</label>
+      <input type="date" id="f-ate" onchange="applyFilters()">
+    </div>
+    <div class="filter-actions">
+      <button class="btn btn-ghost" onclick="clearFilters()">Limpar</button>
+      <button class="btn btn-primary" onclick="exportCSV()">↓ Exportar CSV</button>
+    </div>
+  </div>
+
+  <!-- RESULTS BAR -->
+  <div class="results-bar">
+    <div class="results-count" id="results-count"><strong>0</strong> propostas</div>
+    <div class="sort-wrap">
+      Ordenar por
+      <select id="sort-sel" onchange="applyFilters()">
+        <option value="data-desc">Data (mais recente)</option>
+        <option value="data-asc">Data (mais antiga)</option>
+        <option value="cliente">Cliente A→Z</option>
+        <option value="preco-desc">Valor (maior)</option>
+        <option value="preco-asc">Valor (menor)</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-wrap">
+    <table id="propostas-table">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th class="col-cfg">Configurador</th>
+          <th class="col-produto">Produto / Ref.</th>
+          <th>Valor</th>
+          <th>Data</th>
+          <th class="col-autor">Autor</th>
+          <th class="col-estado">Estado</th>
+          <th style="width:90px"></th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    <div id="empty-state" class="empty-state" style="display:none">
+      <div class="empty-icon">📋</div>
+      <div class="empty-title">Nenhuma proposta encontrada</div>
+      <div class="empty-sub">Tenta ajustar os filtros de pesquisa</div>
+    </div>
+  </div>
+
+  <!-- PAGINATION -->
+  <div class="pagination" id="pagination"></div>
+
+</div>
+
+<!-- ─── MODAL VER PROPOSTA ─── -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modal-title">—</div>
+        <div class="modal-sub" id="modal-sub">—</div>
+      </div>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-ghost" onclick="closeModalDirect()">Fechar</button>
+        <button class="btn btn-primary" id="btn-abrir-cfg">Abrir no configurador →</button>
+      </div>
+      <button class="btn" style="background:var(--light);color:var(--navy);border:1.5px solid var(--border)" onclick="alert('Exportar PDF — disponível após ligação ao servidor')">↓ PDF</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════
+   DADOS DE EXEMPLO
+   Quando ligado ao servidor Flask, substituir
+   por: fetch('/api/propostas').then(r=>r.json())
+═══════════════════════════════════════ */
+const PROPOSTAS = [
+  {
+    id: 1,
+    cliente: 'Câmara Municipal de Valongo',
+    cliente_sigla: 'CM',
+    cliente_cor: '#1a6faa',
+    configurador: 'Águas Pluviais',
+    produto: 'EcoBox 10.000 L + Filtro RoClean',
+    ref: 'AP-2025-031',
+    preco: 11600,
+    data: '2025-03-27',
+    autor: 'NS',
+    autor_nome: 'Nuno Sousa',
+    estado: 'pronta',
+    notas: 'Sistema para rega de jardins municipais. Cliente solicita instalação antes de Abril.',
+    config: {
+      'Área de captação': '420 m²',
+      'Caudal de ponta': '12,6 m³/h',
+      'Volume reservatório': '10.000 L',
+      'Filtro': 'RoClean VF-300',
+      'Bomba': 'RoPump 0,55 kW',
+      'Norma aplicada': 'EN 16941-1'
+    }
+  },
+  {
+    id: 2,
+    cliente: 'Auto Costa, Lda.',
+    cliente_sigla: 'AC',
+    cliente_cor: '#7c3aed',
+    configurador: 'Sep. Hidrocarbonetos',
+    produto: 'RoOil NS10 Classe I + Bypass',
+    ref: 'SH-2025-030',
+    preco: 4850,
+    data: '2025-03-27',
+    autor: 'JA',
+    autor_nome: 'José Afonso',
+    estado: 'enviada',
+    notas: 'Posto de abastecimento com 3 pistas. Caudal de chuva considerado 120 L/s/ha.',
+    config: {
+      'Caudal de chuva Qr': '6,0 L/s',
+      'Caudal de lavagem Qs': '1,5 L/s',
+      'Factor fd': '1,0',
+      'Factor fS': '1,0',
+      'NS calculado': '7,5 → NS 10',
+      'Classe': 'I (< 5 mg/L)',
+      'Norma aplicada': 'NP EN 858-1/2'
+    }
+  },
+  {
+    id: 3,
+    cliente: 'TechPark Maia',
+    cliente_sigla: 'TP',
+    cliente_cor: '#2eaa72',
+    configurador: 'ETAR',
+    produto: 'RoSeptic 200 PE — Fossa séptica + leito percolador',
+    ref: 'ET-2025-029',
+    preco: 18200,
+    data: '2025-03-26',
+    autor: 'NS',
+    autor_nome: 'Nuno Sousa',
+    estado: 'rascunho',
+    notas: 'Zona industrial com efluente misto doméstico e industrial leve. Aguarda aprovação do cliente.',
+    config: {
+      'Capitação': '200 PE',
+      'Caudal médio diário': '30 m³/d',
+      'Carga orgânica': '12 kg CBO5/d',
+      'Tecnologia': 'Fossa séptica + leito percolador',
+      'Dimensão fossa': '45.000 L',
+      'Norma aplicada': 'EN 12566 / DL 152/97'
+    }
+  },
+  {
+    id: 4,
+    cliente: 'Restaurante Hotel Mar',
+    cliente_sigla: 'RH',
+    cliente_cor: '#d97706',
+    configurador: 'Sep. Gorduras',
+    produto: 'RoFett G50 — Aço Inox AISI 304',
+    ref: 'SG-2025-028',
+    preco: 2340,
+    data: '2025-03-25',
+    autor: 'RM',
+    autor_nome: 'Raquel Moreira',
+    estado: 'aceite',
+    notas: 'Restaurante com 120 lugares. Factor de temperatura kt=1,3 (água quente).',
+    config: {
+      'Tipo estabelecimento': 'Restaurante',
+      'Nº de lugares': '120',
+      'Caudal nominal NS': '4,8 L/s',
+      'Factor kt': '1,3 (água quente)',
+      'Factor kf': '1,0',
+      'NS dimensionado': '6,5 → G50',
+      'Norma aplicada': 'EN 1825-1/2'
+    }
+  },
+  {
+    id: 5,
+    cliente: 'Grupo Urbano Norte',
+    cliente_sigla: 'GU',
+    cliente_cor: '#00a8cc',
+    configurador: 'SUDS',
+    produto: 'Trincheira de infiltração RoCko — 120 m lineares',
+    ref: 'SD-2025-027',
+    preco: 31500,
+    data: '2025-03-24',
+    autor: 'JA',
+    autor_nome: 'José Afonso',
+    estado: 'enviada',
+    notas: 'Parque de estacionamento 4.800 m². Período de retorno T=10 anos. Solo permeável — K=5×10⁻⁵ m/s.',
+    config: {
+      'Área drenante': '4.800 m²',
+      'Impermeabilização': '85%',
+      'Caudal de ponta (T=10a)': '245 L/s',
+      'Volume de armazenamento': '86 m³',
+      'Comprimento trincheira': '120 m',
+      'Secção': '0,9 m × 0,8 m',
+      'Norma aplicada': 'BS 8582 / CIRIA C753'
+    }
+  },
+  {
+    id: 6,
+    cliente: 'Construções Silva & Filhos',
+    cliente_sigla: 'CS',
+    cliente_cor: '#e05a2b',
+    configurador: 'Est. Elevatórias',
+    produto: 'Estação elevatória dupla RoPump 4,0 kW',
+    ref: 'EE-2025-026',
+    preco: 14800,
+    data: '2025-03-22',
+    autor: 'RM',
+    autor_nome: 'Raquel Moreira',
+    estado: 'pronta',
+    notas: 'Edifício de 48 apartamentos. Águas residuais domésticas. Câmara enterrada PEAD DN1200.',
+    config: {
+      'Caudal de ponta Qp': '8,5 L/s',
+      'Altura manométrica Hm': '14,2 m',
+      'Volume câmara': '2.800 L',
+      'Bombas': '2× RoPump 4,0 kW (1+1)',
+      'Tempo de arranque': '4,2 min',
+      'Norma aplicada': 'EN 12050 / ISO 9906'
+    }
+  },
+  {
+    id: 7,
+    cliente: 'Município de Gondomar',
+    cliente_sigla: 'MG',
+    cliente_cor: '#1a6faa',
+    configurador: 'Águas Pluviais',
+    produto: 'EcoBox 25.000 L modular + 2× RoClean',
+    ref: 'AP-2025-025',
+    preco: 22400,
+    data: '2025-03-18',
+    autor: 'NS',
+    autor_nome: 'Nuno Sousa',
+    estado: 'aceite',
+    notas: 'Centro escolar — utilização para WCs e rega. Área de cobertura total 1.100 m².',
+    config: {
+      'Área de captação': '1.100 m²',
+      'Volume reservatório': '25.000 L',
+      'Módulos EcoBox': '5× 5.000 L',
+      'Filtros': '2× RoClean VF-500',
+      'Bomba': 'RoPump 1,1 kW',
+      'Norma aplicada': 'EN 16941-1'
+    }
+  },
+  {
+    id: 8,
+    cliente: 'Oficina Mecânica Rocha',
+    cliente_sigla: 'OR',
+    cliente_cor: '#7c3aed',
+    configurador: 'Sep. Hidrocarbonetos',
+    produto: 'RoOil NS6 Classe II',
+    ref: 'SH-2025-024',
+    preco: 2980,
+    data: '2025-03-15',
+    autor: 'TO',
+    autor_nome: 'Técnico',
+    estado: 'enviada',
+    notas: 'Oficina de reparação automóvel. 4 postos de trabalho. Área coberta 320 m².',
+    config: {
+      'Caudal de chuva Qr': '3,8 L/s',
+      'Caudal de lavagem Qs': '0,8 L/s',
+      'NS calculado': '4,6 → NS 6',
+      'Classe': 'II (< 100 mg/L)',
+      'Norma aplicada': 'NP EN 858-1/2'
+    }
+  }
+];
+
+/* ═══════════════════════════════════════
+   ESTADO
+═══════════════════════════════════════ */
+let filteredData = [...PROPOSTAS];
+let currentPage = 1;
+const PER_PAGE = 20;
+let activeTab = 'todas';
+
+/* ═══════════════════════════════════════
+   FILTROS + ORDENAÇÃO
+═══════════════════════════════════════ */
+window.applyFilters = function() {
+  const fCliente = document.getElementById('f-cliente').value.toLowerCase().trim();
+  const fCfg     = document.getElementById('f-cfg').value;
+  const fAutor   = document.getElementById('f-autor').value;
+  const fDe      = document.getElementById('f-de').value;
+  const fAte     = document.getElementById('f-ate').value;
+  const sort     = document.getElementById('sort-sel').value;
+
+  filteredData = PROPOSTAS.filter(p => {
+    if (fCliente && !p.cliente.toLowerCase().includes(fCliente)) return false;
+    if (fCfg && p.configurador !== fCfg) return false;
+    if (fAutor && p.autor !== fAutor) return false;
+    if (fDe && p.data < fDe) return false;
+    if (fAte && p.data > fAte) return false;
+    if (activeTab === 'minhas' && p.autor !== 'NS') return false;
+    if (activeTab === 'enviadas' && p.estado !== 'enviada' && p.estado !== 'aceite') return false;
+    if (activeTab === 'rascunhos' && p.estado !== 'rascunho') return false;
+    return true;
+  });
+
+  filteredData.sort((a, b) => {
+    if (sort === 'data-desc') return b.data.localeCompare(a.data);
+    if (sort === 'data-asc')  return a.data.localeCompare(b.data);
+    if (sort === 'cliente')   return a.cliente.localeCompare(b.cliente);
+    if (sort === 'preco-desc') return b.preco - a.preco;
+    if (sort === 'preco-asc')  return a.preco - b.preco;
+    return 0;
+  });
+
+  currentPage = 1;
+  render();
+};
+
+window.clearFilters = function() {
+  document.getElementById('f-cliente').value = '';
+  document.getElementById('f-cfg').value = '';
+  document.getElementById('f-autor').value = '';
+  document.getElementById('f-de').value = '';
+  document.getElementById('f-ate').value = '';
+  applyFilters();
+};
+
+window.setTab = function(el, tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  activeTab = tab;
+
+  const titles = { todas:'Todas', minhas:'As minhas', enviadas:'Enviadas', rascunhos:'Rascunhos' };
+  document.querySelector('.page-title').innerHTML = `Propostas <span>/ ${titles[tab]}</span>`;
+  applyFilters();
+};
+
+/* ═══════════════════════════════════════
+   RENDER
+═══════════════════════════════════════ */
+function render() {
+  const total = filteredData.length;
+  document.getElementById('results-count').innerHTML = `<strong>${total}</strong> proposta${total !== 1 ? 's' : ''}`;
+
+  const start = (currentPage - 1) * PER_PAGE;
+  const page  = filteredData.slice(start, start + PER_PAGE);
+  const tbody = document.getElementById('tbody');
+  const empty = document.getElementById('empty-state');
+
+  if (page.length === 0) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+  } else {
+    empty.style.display = 'none';
+    tbody.innerHTML = page.map(p => `
+      <tr>
+        <td>
+          <div class="client-cell">
+            <div class="client-av" style="background:${p.cliente_cor}">${p.cliente_sigla}</div>
+            <div>
+              <div class="client-name">${p.cliente}</div>
+              <div class="client-ref">${p.ref}</div>
+            </div>
+          </div>
+        </td>
+        <td class="col-cfg">
+          <span class="cfg-tag" style="background:${p.cliente_cor}18;color:${p.cliente_cor}">
+            <span class="cfg-dot" style="background:${p.cliente_cor}"></span>
+            ${p.configurador}
+          </span>
+        </td>
+        <td class="col-produto">
+          <div class="produto-cell">${p.produto}</div>
+        </td>
+        <td><span class="price-cell">€ ${p.preco.toLocaleString('pt-PT')}</span></td>
+        <td class="date-cell ${isToday(p.data) ? 'date-today' : ''}">${formatDate(p.data)}</td>
+        <td class="col-autor">
+          <div class="author-cell">
+            <div class="author-av">${p.autor}</div>
+            <span class="author-name">${p.autor_nome.split(' ')[0]}</span>
+          </div>
+        </td>
+        <td class="col-estado">
+          <span class="estado-badge estado-${p.estado}">${estadoLabel(p.estado)}</span>
+        </td>
+        <td>
+          <div class="actions-cell">
+            <button class="btn-icon" title="Ver proposta" onclick="openModal(${p.id})">👁</button>
+            <button class="btn-icon" title="Editar" onclick="alert('Editar proposta — disponível após ligação ao servidor')">✏️</button>
+            <button class="btn-icon danger" title="Apagar" onclick="confirmDelete(${p.id})">🗑</button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  renderPagination(total);
+}
+
+function renderPagination(total) {
+  const pages = Math.ceil(total / PER_PAGE);
+  const pg = document.getElementById('pagination');
+  if (pages <= 1) { pg.innerHTML = ''; return; }
+
+  let html = `<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>←</button>`;
+  for (let i = 1; i <= pages; i++) {
+    html += `<button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+  }
+  html += `<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===pages?'disabled':''}>→</button>`;
+  pg.innerHTML = html;
+}
+
+window.goPage = function(p) {
+  currentPage = p;
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+/* ═══════════════════════════════════════
+   MODAL
+═══════════════════════════════════════ */
+window.openModal = function(id) {
+  const p = PROPOSTAS.find(x => x.id === id);
+  if (!p) return;
+
+  document.getElementById('modal-title').textContent = p.cliente;
+  document.getElementById('modal-sub').innerHTML = `
+    <span class="cfg-tag" style="background:${p.cliente_cor}18;color:${p.cliente_cor};display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:5px;font-size:11.5px;font-weight:600;">
+      ${p.configurador}
+    </span>
+    &nbsp; ${p.ref} &nbsp;·&nbsp; ${formatDate(p.data)}
+  `;
+
+  const configRows = Object.entries(p.config).map(([k,v]) =>
+    `<div class="config-row"><span class="k">${k}</span><span class="v">${v}</span></div>`
+  ).join('');
+
+  document.getElementById('modal-body').innerHTML = `
+    <div class="detail-grid">
+      <div class="detail-field"><label>Produto / Sistema</label><div class="val">${p.produto}</div></div>
+      <div class="detail-field"><label>Valor total</label><div class="val" style="color:var(--green);font-family:'Raleway',sans-serif;font-size:16px;font-weight:800;">€ ${p.preco.toLocaleString('pt-PT')}</div></div>
+      <div class="detail-field"><label>Autor</label><div class="val">${p.autor_nome}</div></div>
+      <div class="detail-field"><label>Estado</label><div class="val"><span class="estado-badge estado-${p.estado}">${estadoLabel(p.estado)}</span></div></div>
+    </div>
+    <div class="config-block">
+      <div class="config-block-title">Dados de dimensionamento</div>
+      ${configRows}
+    </div>
+    ${p.notas ? `<div style="margin-bottom:4px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:8px;">Notas</div><div class="notas-block">${p.notas}</div>` : ''}
+  `;
+
+  const cfgLinks = {
+    'Águas Pluviais': 'pluviais.html',
+    'SUDS': 'suds.html',
+    'ETAR': 'tratamento.html',
+    'Sep. Gorduras': 'gorduras.html',
+    'Sep. Hidrocarbonetos': 'hidrocarbonetos.html',
+    'Est. Elevatórias': 'elevatorias.html'
+  };
+  document.getElementById('btn-abrir-cfg').onclick = function() {
+    alert(`A abrir ${p.configurador} com a proposta ${p.ref}\n(disponível após ligação ao servidor)`);
+  };
+
+  document.getElementById('modal-overlay').classList.add('open');
+};
+
+window.closeModal = function(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModalDirect();
+};
+window.closeModalDirect = function() {
+  document.getElementById('modal-overlay').classList.remove('open');
+};
+
+window.confirmDelete = function(id) {
+  const p = PROPOSTAS.find(x => x.id === id);
+  if (confirm(`Apagar proposta ${p.ref} — ${p.cliente}?\nEsta acção não pode ser desfeita.`)) {
+    alert('Apagar — disponível após ligação ao servidor');
+  }
+};
+
+/* ═══════════════════════════════════════
+   EXPORT CSV
+═══════════════════════════════════════ */
+window.exportCSV = function() {
+  const header = ['Ref','Cliente','Configurador','Produto','Valor (€)','Data','Autor','Estado'];
+  const rows = filteredData.map(p => [
+    p.ref, `"${p.cliente}"`, p.configurador, `"${p.produto}"`,
+    p.preco, p.data, p.autor_nome, estadoLabel(p.estado)
+  ]);
+  const csv = [header, ...rows].map(r => r.join(',')).join('\n');
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `propostas_hidrostation_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+};
+
+/* ═══════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════ */
+function formatDate(d) {
+  if (isToday(d)) return 'Hoje';
+  const [y,m,day] = d.split('-');
+  const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  return `${parseInt(day)} ${months[parseInt(m)-1]} ${y}`;
+}
+function isToday(d) {
+  return d === new Date().toISOString().slice(0,10);
+}
+function estadoLabel(e) {
+  return { rascunho:'Rascunho', pronta:'Pronta', enviada:'Enviada', aceite:'Aceite' }[e] || e;
+}
+
+/* ─── INIT ─── */
+applyFilters();
+</script>
+</body>
+</html>
