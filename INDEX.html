@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hidrostation — Portal Interno</title>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #f2f5f8;
+    --white:     #ffffff;
+    --navy:      #0d2d4a;
+    --navy2:     #163d62;
+    --blue:      #1a6faa;
+    --cyan:      #00a8cc;
+    --green:     #2eaa72;
+    --border:    #dde4ec;
+    --text:      #1a2e40;
+    --muted:     #5f7a93;
+    --light:     #eaf0f6;
+    --shadow:    0 2px 16px rgba(13,45,74,0.09);
+    --shadow-lg: 0 8px 40px rgba(13,45,74,0.13);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Open Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  /* ─── BG TEXTURE ─── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 10% -10%, rgba(0,168,204,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 90% 110%, rgba(26,111,170,0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* ═══ LOGIN ═══ */
+  #login-screen {
+    position: fixed; inset: 0; z-index: 200;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(160deg, var(--navy) 0%, var(--navy2) 50%, #0a3d62 100%);
+    animation: fadeUp 0.4s ease;
+  }
+  #login-screen.hidden { display: none; }
+
+  .login-wrap {
+    display: flex;
+    width: 840px; max-width: 95vw;
+    border-radius: 20px; overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.4);
+  }
+
+  .login-left {
+    flex: 1;
+    background: linear-gradient(160deg, rgba(0,168,204,0.15) 0%, transparent 60%);
+    border-right: 1px solid rgba(255,255,255,0.08);
+    padding: 52px 44px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    color: white;
+  }
+  .login-logo-wrap { display: flex; align-items: center; gap: 14px; }
+  .login-logo-wrap img { height: 38px; filter: brightness(0) invert(1); }
+  .login-left-body { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 32px 0; }
+  .login-tagline {
+    font-family: 'Raleway', sans-serif;
+    font-size: 28px; font-weight: 700; line-height: 1.25;
+    color: white; margin-bottom: 16px;
+  }
+  .login-tagline span { color: #5dd3f0; }
+  .login-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.7; }
+  .login-features { display: flex; flex-direction: column; gap: 10px; }
+  .login-feat {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 12.5px; color: rgba(255,255,255,0.55);
+  }
+  .login-feat::before {
+    content: ''; width: 6px; height: 6px;
+    border-radius: 50%; background: var(--cyan); flex-shrink: 0;
+  }
+
+  .login-right {
+    width: 360px; flex-shrink: 0;
+    background: white;
+    padding: 52px 44px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .login-right-title {
+    font-family: 'Raleway', sans-serif;
+    font-size: 22px; font-weight: 700; color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .login-right-sub { font-size: 13px; color: var(--muted); margin-bottom: 32px; }
+
+  .field { margin-bottom: 18px; }
+  .field label {
+    display: block; font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.8px;
+    color: var(--muted); margin-bottom: 7px;
+  }
+  .field input {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 9px;
+    padding: 11px 14px;
+    font-family: 'Open Sans', sans-serif; font-size: 14px;
+    color: var(--text); background: var(--bg);
+    outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .field input:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(26,111,170,0.1);
+    background: white;
+  }
+
+  .btn-entrar {
+    width: 100%; margin-top: 4px;
+    background: var(--navy);
+    border: none; border-radius: 9px;
+    padding: 13px; cursor: pointer;
+    font-family: 'Raleway', sans-serif;
+    font-size: 14px; font-weight: 700;
+    color: white; letter-spacing: 0.3px;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .btn-entrar:hover { background: var(--blue); }
+  .btn-entrar:active { transform: scale(0.99); }
+  .login-error { margin-top: 10px; font-size: 12.5px; color: #e53e3e; text-align: center; min-height: 18px; }
+
+  @media (max-width: 640px) {
+    .login-left { display: none; }
+    .login-right { width: 100%; }
+    .login-wrap { width: 100%; border-radius: 0; min-height: 100vh; }
+  }
+
+  /* ═══ APP ═══ */
+  #app { display: none; position: relative; z-index: 1; min-height: 100vh; }
+  #app.visible { display: block; animation: fadeUp 0.4s ease; }
+
+  /* ─── TOPBAR ─── */
+  .topbar {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--navy);
+    height: 62px;
+    display: flex; align-items: center;
+    padding: 0 32px; gap: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  }
+
+  .topbar-logo img {
+    height: 28px;
+    filter: brightness(0) invert(1);
+    display: block;
+  }
+
+  .topbar-divider { width: 1px; height: 24px; background: rgba(255,255,255,0.15); }
+
+  .topbar-nav { display: flex; gap: 2px; flex: 1; }
+  .topbar-nav a {
+    padding: 6px 14px; border-radius: 7px;
+    font-size: 13.5px; font-weight: 500;
+    color: rgba(255,255,255,0.6); text-decoration: none;
+    transition: all 0.15s;
+  }
+  .topbar-nav a:hover { color: white; background: rgba(255,255,255,0.08); }
+  .topbar-nav a.active { color: white; background: rgba(255,255,255,0.12); }
+
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+
+  .online-pill {
+    display: flex; align-items: center; gap: 6px;
+    padding: 4px 10px; border-radius: 20px;
+    background: rgba(46,170,114,0.15);
+    border: 1px solid rgba(46,170,114,0.3);
+    font-size: 11.5px; color: #5debb0; font-weight: 500;
+  }
+  .online-pill::before {
+    content: ''; width: 6px; height: 6px;
+    border-radius: 50%; background: #2eaa72;
+  }
+
+  .user-chip {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 20px; padding: 4px 12px 4px 4px;
+  }
+  .user-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--cyan);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Raleway', sans-serif; font-size: 11px; font-weight: 700;
+    color: var(--navy);
+  }
+  .user-name { font-size: 13px; color: rgba(255,255,255,0.8); font-weight: 500; }
+
+  .btn-logout {
+    background: transparent; border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 7px; padding: 5px 12px;
+    color: rgba(255,255,255,0.5); font-size: 12.5px; cursor: pointer;
+    transition: all 0.15s; font-family: 'Open Sans', sans-serif;
+  }
+  .btn-logout:hover { border-color: #e53e3e; color: #fc8181; }
+
+  @media (max-width: 768px) {
+    .topbar { padding: 0 16px; }
+    .topbar-nav { display: none; }
+    .online-pill { display: none; }
+  }
+
+  /* ─── HERO BANNER ─── */
+  .hero {
+    background: linear-gradient(110deg, var(--navy) 0%, var(--navy2) 55%, #0a4a7a 100%);
+    padding: 44px 40px 40px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; right: -60px; top: -80px;
+    width: 420px; height: 420px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,168,204,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute; right: 120px; bottom: -40px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,168,204,0.12);
+    pointer-events: none;
+  }
+
+  .hero-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; gap: 32px; }
+  .hero-text { flex: 1; }
+  .hero-greeting { font-size: 13px; color: rgba(255,255,255,0.45); margin-bottom: 8px; font-weight: 500; }
+  .hero-title {
+    font-family: 'Raleway', sans-serif;
+    font-size: 30px; font-weight: 800;
+    color: white; line-height: 1.15; margin-bottom: 10px;
+    letter-spacing: -0.5px;
+  }
+  .hero-title span { color: #5dd3f0; }
+  .hero-sub { font-size: 13.5px; color: rgba(255,255,255,0.45); max-width: 480px; line-height: 1.6; }
+
+  .hero-stats { display: flex; gap: 16px; flex-shrink: 0; }
+  .hstat {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px; padding: 14px 20px;
+    text-align: center; min-width: 100px;
+  }
+  .hstat-val {
+    font-family: 'Raleway', sans-serif;
+    font-size: 26px; font-weight: 800; color: white;
+  }
+  .hstat-val span { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.4); }
+  .hstat-label { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 3px; }
+
+  @media (max-width: 768px) {
+    .hero { padding: 28px 16px; }
+    .hero-inner { flex-direction: column; align-items: flex-start; gap: 20px; }
+    .hero-stats { gap: 10px; }
+    .hstat { min-width: 80px; padding: 10px 14px; }
+    .hero-title { font-size: 22px; }
+  }
+
+  /* ─── MAIN ─── */
+  .main { max-width: 1100px; margin: 0 auto; padding: 36px 32px 60px; }
+  @media (max-width: 768px) { .main { padding: 20px 16px 40px; } }
+
+  /* ─── SECTION HEADER ─── */
+  .section-hd {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 18px; margin-top: 36px;
+  }
+  .section-hd:first-child { margin-top: 0; }
+  .section-hd-label {
+    font-family: 'Raleway', sans-serif;
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1.8px;
+    color: var(--muted); white-space: nowrap;
+  }
+  .section-hd-line { flex: 1; height: 1px; background: var(--border); }
+
+  /* ─── ACESSO RÁPIDO (Propostas) ─── */
+  .quick-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 28px;
+    display: flex; align-items: center; gap: 24px;
+    box-shadow: var(--shadow);
+    cursor: pointer; text-decoration: none; color: inherit;
+    transition: all 0.2s;
+    margin-bottom: 32px;
+    position: relative; overflow: hidden;
+  }
+  .quick-card::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 4px; background: var(--blue);
+    border-radius: 4px 0 0 4px;
+  }
+  .quick-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); border-color: rgba(26,111,170,0.3); }
+  .quick-icon {
+    width: 52px; height: 52px; border-radius: 12px;
+    background: rgba(26,111,170,0.08);
+    border: 1px solid rgba(26,111,170,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+  }
+  .quick-body { flex: 1; }
+  .quick-title { font-family: 'Raleway', sans-serif; font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+  .quick-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .quick-badges { display: flex; gap: 12px; flex-shrink: 0; }
+  .qbadge {
+    background: var(--light);
+    border: 1px solid var(--border);
+    border-radius: 10px; padding: 10px 16px; text-align: center;
+  }
+  .qbadge-val { font-family: 'Raleway', sans-serif; font-size: 22px; font-weight: 800; color: var(--navy); }
+  .qbadge-label { font-size: 10.5px; color: var(--muted); margin-top: 1px; }
+  @media (max-width: 600px) { .quick-badges { display: none; } }
+
+  /* ─── CONFIGURADORES GRID ─── */
+  .cfg-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+
+  .cfg-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    cursor: pointer; text-decoration: none; color: inherit;
+    box-shadow: var(--shadow);
+    transition: all 0.2s;
+    display: block;
+    animation: fadeUp 0.4s ease both;
+  }
+  .cfg-card:nth-child(1) { animation-delay: 0.05s; }
+  .cfg-card:nth-child(2) { animation-delay: 0.10s; }
+  .cfg-card:nth-child(3) { animation-delay: 0.15s; }
+  .cfg-card:nth-child(4) { animation-delay: 0.20s; }
+  .cfg-card:nth-child(5) { animation-delay: 0.25s; }
+  .cfg-card:nth-child(6) { animation-delay: 0.30s; }
+
+  .cfg-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-3px);
+    border-color: var(--card-accent, var(--blue));
+  }
+
+  .cfg-card-top {
+    height: 7px;
+    background: var(--card-accent, var(--blue));
+  }
+
+  .cfg-card-body { padding: 22px 24px 20px; }
+
+  .cfg-icon-row { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+  .cfg-icon {
+    width: 46px; height: 46px; border-radius: 11px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+    background: color-mix(in srgb, var(--card-accent, var(--blue)) 10%, white);
+    border: 1px solid color-mix(in srgb, var(--card-accent, var(--blue)) 20%, transparent);
+  }
+  .cfg-norm {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 10.5px; font-weight: 600;
+    color: color-mix(in srgb, var(--card-accent, var(--blue)) 80%, var(--muted));
+    background: color-mix(in srgb, var(--card-accent, var(--blue)) 8%, white);
+    border: 1px solid color-mix(in srgb, var(--card-accent, var(--blue)) 18%, transparent);
+    padding: 3px 8px; border-radius: 5px;
+    letter-spacing: 0.3px;
+  }
+
+  .cfg-name {
+    font-family: 'Raleway', sans-serif;
+    font-size: 16px; font-weight: 700; color: var(--navy);
+    margin-bottom: 7px; line-height: 1.3;
+  }
+  .cfg-desc { font-size: 12.5px; color: var(--muted); line-height: 1.6; }
+
+  .cfg-card-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 24px;
+    background: var(--light);
+    border-top: 1px solid var(--border);
+  }
+  .cfg-ref { font-size: 11px; color: var(--muted); }
+  .cfg-arrow {
+    width: 28px; height: 28px; border-radius: 7px;
+    background: var(--card-accent, var(--blue));
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 14px;
+    transition: transform 0.15s;
+  }
+  .cfg-card:hover .cfg-arrow { transform: translateX(3px); }
+
+  /* ─── PROPOSTAS RECENTES ─── */
+  .propostas-wrap {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .propostas-wrap table { width: 100%; border-collapse: collapse; }
+  .propostas-wrap th {
+    padding: 11px 18px;
+    background: var(--light);
+    border-bottom: 1px solid var(--border);
+    font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.9px;
+    color: var(--muted); text-align: left;
+  }
+  .propostas-wrap td {
+    padding: 13px 18px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .propostas-wrap tr:last-child td { border-bottom: none; }
+  .propostas-wrap tr:hover td { background: var(--light); }
+
+  .client-row { display: flex; align-items: center; gap: 9px; }
+  .client-av {
+    width: 30px; height: 30px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Raleway', sans-serif; font-size: 11px; font-weight: 700;
+    color: white; flex-shrink: 0;
+  }
+  .client-name { font-weight: 600; color: var(--navy); }
+
+  .app-tag {
+    padding: 3px 9px; border-radius: 5px;
+    font-size: 11px; font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .price-val { font-family: 'Raleway', sans-serif; font-weight: 700; color: var(--green); }
+  .date-val { color: var(--muted); font-size: 12.5px; }
+  .author-av {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--light); border: 1px solid var(--border);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: 'Raleway', sans-serif; font-size: 10px; font-weight: 700;
+    color: var(--navy);
+  }
+
+  .btn-ver {
+    background: white; border: 1px solid var(--border);
+    border-radius: 6px; padding: 4px 10px;
+    font-size: 12px; color: var(--muted); cursor: pointer;
+    font-family: 'Open Sans', sans-serif;
+    transition: all 0.15s; text-decoration: none; display: inline-block;
+  }
+  .btn-ver:hover { border-color: var(--blue); color: var(--blue); }
+
+  @media (max-width: 768px) {
+    .propostas-wrap th:nth-child(3),
+    .propostas-wrap td:nth-child(3),
+    .propostas-wrap th:nth-child(5),
+    .propostas-wrap td:nth-child(5) { display: none; }
+  }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 20px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    max-width: 1100px; margin: 0 auto;
+    font-size: 12px; color: var(--muted);
+  }
+  .footer img { height: 20px; opacity: 0.4; }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ LOGIN ═══ -->
+<div id="login-screen">
+  <div class="login-wrap">
+    <!-- Left panel -->
+    <div class="login-left">
+      <div class="login-logo-wrap">
+        <img src="https://hidrostation.pt/assets/logo.png" alt="Hidrostation" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <span style="display:none;font-family:'Raleway',sans-serif;font-weight:800;font-size:20px;color:white;">Hidrostation</span>
+      </div>
+      <div class="login-left-body">
+        <div class="login-tagline">Portal Interno<br><span>Hidrostation</span></div>
+        <div class="login-desc" style="margin-bottom:24px">Acesso à equipa técnica — configuradores, ferramentas e gestão de propostas.</div>
+        <div class="login-features">
+          <div class="login-feat">6 configuradores de dimensionamento</div>
+          <div class="login-feat">Gestão de propostas e clientes</div>
+          <div class="login-feat">Ferramentas internas de operação</div>
+          <div class="login-feat">Classificador de emails e produção</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.25);">Acesso restrito · Hidrostation © 2026</div>
+    </div>
+
+    <!-- Right panel -->
+    <div class="login-right">
+      <div class="login-right-title">Bem-vindo</div>
+      <div class="login-right-sub">Introduza as suas credenciais para aceder</div>
+
+      <div class="field">
+        <label>Utilizador</label>
+        <input type="text" id="user-input" placeholder="nome.apelido" autocomplete="username" />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="pass-input" placeholder="••••••••" autocomplete="current-password" />
+      </div>
+
+      <button class="btn-entrar" onclick="doLogin()">Entrar no Portal Interno</button>
+      <div class="login-error" id="login-error"></div>
+
+      <div style="margin-top:28px;padding-top:20px;border-top:1px solid var(--border);font-size:11.5px;color:var(--muted);text-align:center;line-height:1.7">
+        Problemas de acesso?<br>
+        Contacte <a href="/cdn-cgi/l/email-protection#234b4a47514c505742574a4c4d634b4a47514c505742574a4c4d0d5357" style="color:var(--blue);text-decoration:none;"><span class="__cf_email__" data-cfemail="660e0f021409151207120f0908260e0f021409151207120f0908481612">[email&#160;protected]</span></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ APP ═══ -->
+<div id="app">
+
+  <!-- TOPBAR -->
+  <nav class="topbar">
+    <a href="#" class="topbar-logo">
+      <img src="https://hidrostation.pt/assets/logo.png" alt="Hidrostation"
+           onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span style=\'font-family:Raleway,sans-serif;font-weight:800;font-size:17px;color:white\'>Hidrostation</span>')">
+    </a>
+    <div class="topbar-divider"></div>
+    <div class="topbar-nav">
+      <a href="#" class="active" id="nav-hub" onclick="navClick(this)">Início</a>
+      <a href="propostas.html" id="nav-propostas">Propostas</a>
+    </div>
+    <div class="topbar-right">
+      <div class="online-pill">Online</div>
+      <div class="user-chip">
+        <div class="user-avatar" id="top-avatar">JS</div>
+        <span class="user-name" id="top-name">João Silva</span>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">Sair</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <div class="hero-greeting" id="hero-greeting">Bom dia —</div>
+        <div class="hero-title">Portal Interno<br><span>Hidrostation</span></div>
+        <div class="hero-sub">Configuradores, ferramentas e gestão de propostas para a equipa técnica.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- Elementos ocultos para controlo de roles (nav) -->
+    <span id="card-propostas" style="display:none"></span>
+    <span id="card-pedidos" style="display:none"></span>
+
+    <!-- TABS com mais destaque -->
+    <div style="display:flex;align-items:stretch;gap:8px;margin-bottom:28px;flex-wrap:wrap;">
+      <button id="tab-cfg" onclick="window.switchTab('cfg')"
+        style="flex:1;min-width:140px;padding:14px 20px;
+               font-family:'Raleway',sans-serif;font-weight:700;font-size:13.5px;
+               background:var(--navy);color:white;
+               border:none;border-radius:10px;cursor:pointer;transition:all 0.15s;
+               display:flex;align-items:center;justify-content:center;gap:8px;">
+        ⚙️ Configuradores
+      </button>
+      <button id="tab-tools" onclick="window.switchTab('tools')"
+        style="flex:1;min-width:140px;padding:14px 20px;
+               font-family:'Raleway',sans-serif;font-weight:700;font-size:13.5px;
+               background:white;color:var(--muted);
+               border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:all 0.15s;
+               display:flex;align-items:center;justify-content:center;gap:8px;">
+        🔧 Ferramentas
+      </button>
+      <button id="tab-crm" onclick="window.switchTab('crm')"
+        style="flex:1;min-width:140px;padding:14px 20px;
+               font-family:'Raleway',sans-serif;font-weight:700;font-size:13.5px;
+               background:white;color:var(--muted);
+               border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:all 0.15s;
+               display:flex;align-items:center;justify-content:center;gap:8px;">
+        👥 CRM
+      </button>
+      <button id="tab-fin" onclick="window.switchTab('fin')"
+        style="flex:1;min-width:140px;padding:14px 20px;
+               font-family:'Raleway',sans-serif;font-weight:700;font-size:13.5px;
+               background:white;color:var(--muted);
+               border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:all 0.15s;
+               display:flex;align-items:center;justify-content:center;gap:8px;">
+        💶 Gestão e Financeiro
+      </button>
+    </div>
+
+    <!-- CONFIGURADORES GRID -->
+    <div id="section-cfg">
+    <div class="cfg-grid">
+
+      <!-- 1. Águas Pluviais -->
+      <div class="cfg-card" style="--card-accent:#1a6faa" onclick="window.location.href='pluviais.html'">
+        <div class="cfg-card-top"></div>
+        <div class="cfg-card-body">
+          <div class="cfg-icon-row">
+            <div class="cfg-icon">🌧️</div>
+            <div class="cfg-norm">EN 16941-1</div>
+          </div>
+          <div class="cfg-name">Aproveitamento de<br>Águas Pluviais</div>
+          <div class="cfg-desc">Dimensionamento de sistemas de captação, filtração e armazenamento de água da chuva para usos não potáveis.</div>
+        </div>
+        <div class="cfg-card-footer">
+          <div class="cfg-ref">EcoBox · RoClean · Filtros</div>
+          <div class="cfg-arrow">→</div>
+        </div>
+      </div>
+
+      <!-- 2. SUDS -->
+      <div class="cfg-card" style="--card-accent:#00a8cc" onclick="window.location.href='suds.html'">
+        <div class="cfg-card-top"></div>
+        <div class="cfg-card-body">
+          <div class="cfg-icon-row">
+            <div class="cfg-icon">🌊</div>
+            <div class="cfg-norm">BS 8582 · CIRIA C753</div>
+          </div>
+          <div class="cfg-name">Sistemas SUDS</div>
+          <div class="cfg-desc">Drenagem urbana sustentável — cálculo de caudais, dimensionamento de trincheiras, valas e bacias de infiltração.</div>
+        </div>
+        <div class="cfg-card-footer">
+          <div class="cfg-ref">RoCko · RoNdo · RoBox</div>
+          <div class="cfg-arrow">→</div>
+        </div>
+      </div>
+
+      <!-- 3. ETARs -->
+      <div class="cfg-card" style="--card-accent:#2eaa72" onclick="window.location.href='etars.html'">
+        <div class="cfg-card-top"></div>
+        <div class="cfg-card-body">
+          <div class="cfg-icon-row">
+            <div class="cfg-icon">🔄</div>
+            <div class="cfg-norm">DL 152/97 · EN 12566</div>
+          </div>
+          <div class="cfg-name">ETARs</div>
+          <div class="cfg-desc">Estações de tratamento de águas residuais — dimensionamento por capitação, escolha de tecnologia e cálculo de carga orgânica.</div>
+        </div>
+        <div class="cfg-card-footer">
+          <div class="cfg-ref">RoSeptic · Biodigestores</div>
+          <div class="cfg-arrow">→</div>
+        </div>
+      </div>
+
+      <!-- 4. Separadores de Gorduras -->
+      <div class="cfg-card" style="--card-accent:#f59e0b" onclick="window.location.href='gorduras.html'">
+        <div class="cfg-card-top"></div>
+        <div class="cfg-card-body">
+          <div class="cfg-icon-row">
+            <div class="cfg-icon">🍳</div>
+            <div class="cfg-norm">EN 1825-1/2</div>
+          </div>
+          <div class="cfg-name">Separadores de<br>Gorduras</div>
+          <div class="cfg-desc">Cálculo pelo método EN 1825 com caudais nominais, factores de correcção por temperatura e tipo de estabelecimento.</div>
+        </div>
+        <div class="cfg-card-footer">
+          <div class="cfg-ref">RoFett · Série Aço Inox</div>
+          <div class="cfg-arrow">→</div>
+        </div>
+      </div>
+
+      <!-- 5. Separadores de Hidrocarbonetos -->
+      <div class="cfg-card" style="--card-accent:#7c3aed" onclick="window.location.href='hidrocarbonetos.html'">
+        <div class="cfg-card-top"></div>
+        <div class="cfg-card-body">
+          <div class="cfg-icon-row">
+            <div class="cfg-icon">⛽</div>
+            <div class="cfg-norm">NP EN 858-1/2</div>
+          </div>
+          <div class="cfg-name">Separadores de<br>Hidrocarbonetos</div>
+          <div class="cfg-desc">Dimensionamento pela fórmula NS = (Qr + fd × Qs) × fS com classes I e II, para parques, postos e oficinas.</div>
+        </div>
+        <div class="cfg-card-footer">
+          <div class="cfg-ref">RoOil · Bypass automático</div>
+          <div class="cfg-arrow">→</div>
+        </div>
+      </div>
+
+      <!-- 6. Estações Elevatórias -->
+      <div class="cfg-card" style="--card-accent:#e05a2b" onclick="window.location.href='elevatorias.html'">
+        <div class="cfg-card-top"></div>
+        <div class="cfg-card-body">
+          <div class="cfg-icon-row">
+            <div class="cfg-icon">⚡</div>
+            <div class="cfg-norm">EN 12050 · ISO 9906</div>
+          </div>
+          <div class="cfg-name">Estações Elevatórias</div>
+          <div class="cfg-desc">Selecção de bombas, cálculo de caudal de ponta, altura manométrica e volume de câmara para águas residuais e pluviais.</div>
+        </div>
+        <div class="cfg-card-footer">
+          <div class="cfg-ref">RoPump · Grupos submersíveis</div>
+          <div class="cfg-arrow">→</div>
+        </div>
+      </div>
+
+    </div><!-- /cfg-grid -->
+    </div><!-- /section-cfg -->
+
+    <!-- FERRAMENTAS INTERNAS -->
+    <div id="section-tools" style="display:none">
+      <div class="cfg-grid">
+
+        <!-- Otimizador de Carga -->
+        <div class="cfg-card" style="--card-accent:#0d2d4a" onclick="window.location.href='logistica.html'">
+          <div class="cfg-card-top"></div>
+          <div class="cfg-card-body">
+            <div class="cfg-icon-row">
+              <div class="cfg-icon">🚚</div>
+              <div class="cfg-norm">Logística</div>
+            </div>
+            <div class="cfg-name">Otimizador de Carga</div>
+            <div class="cfg-desc">Planeamento de espaço em camião para reservatórios cilíndricos — aninhamento e maximização de carga.</div>
+          </div>
+          <div class="cfg-card-footer">
+            <div class="cfg-ref">Cylinder Pack · Transporte</div>
+            <div class="cfg-arrow">→</div>
+          </div>
+        </div>
+
+        <!-- Classificador de Emails -->
+        <div class="cfg-card" style="--card-accent:#0891b2" onclick="window.location.href='classificador-emails.html'">
+          <div class="cfg-card-top"></div>
+          <div class="cfg-card-body">
+            <div class="cfg-icon-row">
+              <div class="cfg-icon">📧</div>
+              <div class="cfg-norm">Gmail · IA</div>
+            </div>
+            <div class="cfg-name">Classificador de Emails</div>
+            <div class="cfg-desc">Identifica e classifica pedidos de orçamento nas caixas de correio da empresa. Powered by Claude AI.</div>
+          </div>
+          <div class="cfg-card-footer">
+            <div class="cfg-ref">Gmail · Inbox · Triagem</div>
+            <div class="cfg-arrow">→</div>
+          </div>
+        </div>
+
+        <!-- Gestão de Produção -->
+        <div class="cfg-card" style="--card-accent:#059669" onclick="window.location.href='prodfat.html'">
+          <div class="cfg-card-top"></div>
+          <div class="cfg-card-body">
+            <div class="cfg-icon-row">
+              <div class="cfg-icon">🏭</div>
+              <div class="cfg-norm">Produção · Faturação</div>
+            </div>
+            <div class="cfg-name">Gestão de Produção</div>
+            <div class="cfg-desc">Ciclo de vida de encomendas, tracking por departamento, documentos e notificações entre equipas.</div>
+          </div>
+          <div class="cfg-card-footer">
+            <div class="cfg-ref">ProdFat · Firebase · Sync</div>
+            <div class="cfg-arrow">→</div>
+          </div>
+        </div>
+
+        <!-- Caderno de Instalação e Operação -->
+        <div class="cfg-card" style="--card-accent:#0369a1" onclick="window.location.href='caderno-elevatorias.html'">
+          <div class="cfg-card-top"></div>
+          <div class="cfg-card-body">
+            <div class="cfg-icon-row">
+              <div class="cfg-icon">📖</div>
+              <div class="cfg-norm">Manual Técnico</div>
+            </div>
+            <div class="cfg-name">Caderno de Instalação<br>e Operação — Elevatórias</div>
+            <div class="cfg-desc">Manual técnico de instalação, arranque e operação de estações elevatórias. Procedimentos e especificações.</div>
+          </div>
+          <div class="cfg-card-footer">
+            <div class="cfg-ref">RoPump · Manutenção · Operação</div>
+            <div class="cfg-arrow">→</div>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- /section-tools -->
+
+    <!-- ── CRM ── -->
+    <div id="section-crm" style="display:none">
+      <div class="cfg-grid">
+
+        <div class="cfg-card" style="--card-accent:#7c3aed" onclick="window.location.href='crm.html'">
+          <div class="cfg-card-top"></div>
+          <div class="cfg-card-body">
+            <div class="cfg-icon-row"><div class="cfg-icon">📊</div><div class="cfg-norm">Pipeline</div></div>
+            <div class="cfg-name">Pipeline de Oportunidades</div>
+            <div class="cfg-desc">Kanban de oportunidades comerciais — acompanhe o estado de cada negócio da prospecção ao fecho.</div>
+          </div>
+          <div class="cfg-card-footer"><div class="cfg-ref">Kanban · Deals · Fases</div><div class="cfg-arrow">→</div></div>
+        </div>
+
+        <div class="cfg-card" style="--card-accent:#7c3aed" onclick="window.location.href='crm.html#contactos'">
+          <div class="cfg-card-top"></div>
+          <div class="cfg-card-body">
+            <div class="cfg-icon-row"><div class="cfg-icon">🏢</div><div class="cfg-norm">Contactos</div></div>
+            <div class="cfg-name">Contactos e Empresas</div>
+            <div class="cfg-desc">Base de dados de clientes e empresas com histórico de interacções e propostas associadas.</div>
+          </div>
+          <div class="cfg-card-footer"><div class="cfg-ref">Clientes · Empresas · Histórico</div><div class="cfg-arrow">→</div></div>
+        </div>
+
+        <div class="cfg-card" style="--card-accent:#7c3aed" onclick="window.location.href='crm.html#tarefas'">
+          <div class="cfg-card-top"></div>
+          <div class="cfg-card-body">
+            <div class="cfg-icon-row"><div class="cfg-icon">✅</div><div class="cfg-norm">Tarefas</div></div>
+            <div class="cfg-name">Tarefas e Follow-ups</div>
+            <div class="cfg-desc">Gestão de tarefas comerciais, lembretes e follow-ups por cliente ou oportunidade.</div>
+          </div>
+          <div class="cfg-card-footer"><div class="cfg-ref">To-do · Lembretes · Follow-up</div><div class="cfg-arrow">→</div></div>
+        </div>
+
+      </div>
+    </div><!-- /section-crm -->
+
+    <!-- ── GESTÃO E FINANCEIRO ── -->
+    <div id="section-fin" style="display:none">
+      <div class="cfg-grid">
+
+        <div class="cfg-card" style="--card-accent:#059669" onclick="window.location.href='financeiro.html#margens'">
+          <div class="cfg-card-top"></div>
+          <div class="cfg-card-body">
+            <div class="cfg-icon-row"><div class="cfg-icon">📈</div><div class="cfg-norm">Interno</div></div>
+            <div class="cfg-name">Margens e Preços</div>
+            <div class="cfg-desc">Tabelas de margens por produto, preços de custo vs. venda e simulação de rentabilidade.</div>
+          </div>
+          <div class="cfg-card-footer"><div class="cfg-ref">Margens · PVP · Custo</div><div class="cfg-arrow">→</div></div>
+        </div>
+
+        <div class="cfg-card" style="--card-accent:#059669" onclick="window.location.href='financeiro.html#receber'">
+          <div class="cfg-card-top"></div>
+          <div class="cfg-card-body">
+            <div class="cfg-icon-row"><div class="cfg-icon">💶</div><div class="cfg-norm">Financeiro</div></div>
+            <div class="cfg-name">Contas a Receber</div>
+            <div class="cfg-desc">Acompanhamento de facturas pendentes, datas de vencimento e estado de pagamento por cliente.</div>
+          </div>
+          <div class="cfg-card-footer"><div class="cfg-ref">Facturas · Vencimentos · Cobranças</div><div class="cfg-arrow">→</div></div>
+        </div>
+
+      </div>
+    </div><!-- /section-fin -->
+
+    <div id="section-actividade">
+    <div class="section-hd" style="margin-top:8px">
+      <div class="section-hd-label">Actividade Recente</div>
+      <div class="section-hd-line"></div>
+      <a href="propostas.html" style="font-size:12px;color:var(--blue);text-decoration:none;white-space:nowrap;font-weight:600;">Ver todas →</a>
+    </div>
+
+    <div class="propostas-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Cliente</th>
+            <th>Configurador</th>
+            <th>Valor</th>
+            <th>Data</th>
+            <th>Por</th>
+          </tr>
+        </thead>
+        <tbody id="actividade-tbody"></tbody>
+      </table>
+      <div id="actividade-empty" style="display:none;text-align:center;padding:32px 20px;color:var(--muted);font-size:13px;">
+        Ainda não existem propostas guardadas. Quando terminar uma configuração clique em "Guardar Proposta".
+      </div>
+    </div>
+    </div><!-- /section-actividade -->
+
+    <!-- Footer -->
+    <div class="footer" style="margin-top:40px;padding:20px 0 0">
+      <img src="https://hidrostation.pt/assets/logo.png" alt="Hidrostation"
+           onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span style=\'font-family:Raleway,sans-serif;font-weight:700;font-size:13px;color:var(--muted)\'>Hidrostation</span>')">
+      <span>Portal Interno Hidrostation · Uso exclusivo de colaboradores</span>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  /* ══════════════════════════════════════
+     PROPOSTAS STORE
+     Camada de dados partilhada entre o hub
+     e todos os configuradores.
+     Chave localStorage: 'hst_propostas'
+     Quando o servidor estiver pronto:
+       - guardar()  → POST /api/propostas
+       - listar()   → GET  /api/propostas
+  ══════════════════════════════════════ */
+  const STORAGE_KEY = 'hst_propostas';
+
+  const CFG_CORES = {
+    'Águas Pluviais':       '#1a6faa',
+    'SUDS':                 '#00a8cc',
+    'ETAR':                 '#2eaa72',
+    'Sep. Gorduras':        '#d97706',
+    'Sep. Hidrocarbonetos': '#7c3aed',
+    'Est. Elevatórias':     '#e05a2b',
+  };
+
+  const PropostasStore = {
+    listar() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+      catch { return []; }
+    },
+    guardar(proposta) {
+      const lista = this.listar();
+      proposta.id        = proposta.id || Date.now();
+      proposta.data      = proposta.data || new Date().toISOString().slice(0,10);
+      proposta.estado    = proposta.estado || 'rascunho';
+      lista.unshift(proposta);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(lista));
+      return proposta;
+    },
+    apagar(id) {
+      const lista = this.listar().filter(p => p.id !== id);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(lista));
+    },
+    ultimas(n) {
+      return this.listar().slice(0, n);
+    }
+  };
+
+  /* Expõe globalmente para os configuradores chamarem */
+  window.PropostasStore = PropostasStore;
+
+  function inicialsCor(nome) {
+    if (!nome) return { initials: '?', cor: '#5f7a93' };
+    const parts = nome.trim().split(/\s+/);
+    const initials = (parts[0][0] + (parts[1]?.[0] || '')).toUpperCase();
+    const cores = ['#1a6faa','#2eaa72','#7c3aed','#e05a2b','#d97706','#00a8cc','#0891b2','#059669'];
+    const cor = cores[nome.charCodeAt(0) % cores.length];
+    return { initials, cor };
+  }
+
+  function formatDataTabela(d) {
+    if (!d) return '—';
+    const hoje = new Date().toISOString().slice(0,10);
+    const ontem = new Date(Date.now()-86400000).toISOString().slice(0,10);
+    if (d === hoje)  return 'Hoje';
+    if (d === ontem) return 'Ontem';
+    const [y,m,day] = d.split('-');
+    const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+    return `${parseInt(day)} ${meses[parseInt(m)-1]}`;
+  }
+
+  function renderActividade() {
+    const lista = PropostasStore.ultimas(10);
+    const tbody = document.getElementById('actividade-tbody');
+    const empty = document.getElementById('actividade-empty');
+    if (!tbody) return;
+
+    if (!lista.length) {
+      tbody.innerHTML = '';
+      if (empty) empty.style.display = 'block';
+      return;
+    }
+    if (empty) empty.style.display = 'none';
+
+    tbody.innerHTML = lista.map(p => {
+      const { initials, cor } = inicialsCor(p.cliente);
+      const cfgCor = CFG_CORES[p.configurador] || '#1a6faa';
+      const preco  = p.preco_total ? `€ ${Number(p.preco_total).toLocaleString('pt-PT')}` : '—';
+      const codigo = p.ref || p.id || '—';
+      return `
+        <tr>
+          <td style="font-family:'Raleway',sans-serif;font-weight:700;font-size:12px;color:var(--muted);white-space:nowrap">${codigo}</td>
+          <td><div class="client-row">
+            <div class="client-av" style="background:${cor}">${initials}</div>
+            <span class="client-name">${p.cliente || '—'}</span>
+          </div></td>
+          <td><span class="app-tag" style="background:${cfgCor}18;color:${cfgCor};">${p.configurador || '—'}</span></td>
+          <td class="price-val">${preco}</td>
+          <td class="date-val">${formatDataTabela(p.data)}</td>
+          <td><span class="author-av">${p.autor || '—'}</span></td>
+        </tr>`;
+    }).join('');
+  }
+
+  /* ══════════════════════════════════════
+     ROLES E PERMISSÕES
+     tabs:    cfg | tools | crm | fin
+     nav:     propostas | pedidos
+     cards:   card-propostas | card-pedidos
+  ══════════════════════════════════════ */
+  const ROLES = {
+    admin:             { tabs: ['cfg','tools','crm','fin'], nav: ['propostas','pedidos'] },
+    comercial_interno: { tabs: ['cfg','tools'],             nav: ['propostas','pedidos'] },
+    comercial_externo: { tabs: ['cfg','crm'],               nav: [] },
+    administrativo:    { tabs: ['cfg','tools','crm','fin'], nav: ['pedidos'] },
+    tecnico:           { tabs: ['tools'],                   nav: [] },
+  };
+
+  const USERS = {
+    'nuno':   { pass: 'nuno2026',    name: 'Nuno Sousa',    initials: 'NS', role: 'admin'             },
+    'jose':   { pass: 'jose2026',    name: 'José Afonso',   initials: 'JA', role: 'comercial_interno' },
+    'raquel': { pass: 'raquel2026',  name: 'Raquel Moreira',initials: 'RM', role: 'administrativo'    },
+    'tecnico':{ pass: 'tecnico2026', name: 'Técnico',       initials: 'TO', role: 'tecnico'           },
+  };
+
+  const ALL_TABS = ['cfg','tools','crm','fin'];
+  const TAB_LABELS = { cfg:'tab-cfg', tools:'tab-tools', crm:'tab-crm', fin:'tab-fin' };
+  const TAB_SECTIONS = { cfg:'section-cfg', tools:'section-tools', crm:'section-crm', fin:'section-fin' };
+
+  function applyRole(role) {
+    const perms = ROLES[role];
+
+    /* ── Tabs ── */
+    ALL_TABS.forEach(t => {
+      const tabEl = document.getElementById(TAB_LABELS[t]);
+      if (tabEl) tabEl.style.display = perms.tabs.includes(t) ? 'inline-block' : 'none';
+    });
+
+    /* ── Quick cards ── */
+    const cardPropostas = document.getElementById('card-propostas');
+    const cardPedidos   = document.getElementById('card-pedidos');
+    if (cardPropostas) cardPropostas.style.display = perms.nav.includes('propostas') ? 'flex' : 'none';
+    if (cardPedidos)   cardPedidos.style.display   = perms.nav.includes('pedidos')   ? 'flex' : 'none';
+
+    /* ── Topbar nav links ── */
+    const navPropostas = document.getElementById('nav-propostas');
+    const navPedidos   = document.getElementById('nav-pedidos');
+    if (navPropostas) navPropostas.style.display = perms.nav.includes('propostas') ? 'inline-block' : 'none';
+    if (navPedidos)   navPedidos.style.display   = perms.nav.includes('pedidos')   ? 'inline-block' : 'none';
+
+    /* ── Activar primeiro tab disponível ── */
+    const firstTab = perms.tabs[0];
+    if (firstTab) window.switchTab(firstTab);
+  }
+
+  window.doLogin = function() {
+    const u = document.getElementById('user-input').value.trim().toLowerCase();
+    const p = document.getElementById('pass-input').value;
+    const err = document.getElementById('login-error');
+    if (USERS[u] && USERS[u].pass === p) {
+      err.textContent = '';
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('app').classList.add('visible');
+      const usr = USERS[u];
+      document.getElementById('top-avatar').textContent = usr.initials;
+      document.getElementById('top-name').textContent = usr.name;
+      const h = new Date().getHours();
+      const g = h < 12 ? 'Bom dia' : h < 19 ? 'Boa tarde' : 'Boa noite';
+      document.getElementById('hero-greeting').textContent = `${g}, ${usr.name.split(' ')[0]} —`;
+      applyRole(usr.role);
+      renderActividade();
+    } else {
+      err.textContent = 'Utilizador ou password incorretos.';
+      document.getElementById('pass-input').value = '';
+    }
+  };
+
+  window.doLogout = function() {
+    document.getElementById('app').classList.remove('visible');
+    document.getElementById('login-screen').classList.remove('hidden');
+    document.getElementById('user-input').value = '';
+    document.getElementById('pass-input').value = '';
+  };
+
+  window.switchTab = function(tab) {
+    const tabs    = ['cfg','tools','crm','fin'];
+    const labels  = { cfg:'tab-cfg', tools:'tab-tools', crm:'tab-crm', fin:'tab-fin' };
+    const sections= { cfg:'section-cfg', tools:'section-tools', crm:'section-crm', fin:'section-fin' };
+
+    tabs.forEach(t => {
+      const isActive = t === tab;
+      const btn = document.getElementById(labels[t]);
+      if (!btn) return;
+      document.getElementById(sections[t]).style.display = isActive ? 'block' : 'none';
+      btn.style.background = isActive ? 'var(--navy)' : 'white';
+      btn.style.color      = isActive ? 'white' : 'var(--muted)';
+      btn.style.border     = isActive ? '1.5px solid var(--navy)' : '1.5px solid var(--border)';
+    });
+
+    document.getElementById('section-actividade').style.display = tab === 'cfg' ? 'block' : 'none';
+  };
+
+  window.navClick = function(el) {
+    document.querySelectorAll('.topbar-nav a').forEach(a => a.classList.remove('active'));
+    el.classList.add('active');
+  };
+
+  document.addEventListener('DOMContentLoaded', function() {
+    ['user-input','pass-input'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.addEventListener('keydown', function(e) { if (e.key === 'Enter') window.doLogin(); });
+    });
+  });
+</script>
+</body>
+</html>
