@@ -1019,11 +1019,15 @@
     tecnico:           { tabs: ['tools'],                   nav: [] },
   };
 
+  // Portal descontinuado — a autenticação real está agora no hub Flask
+  // (hub.hidrostation.pt), com passwords em bcrypt no servidor. As passwords
+  // hardcoded foram removidas daqui por segurança (este login client-side
+  // nunca foi seguro).
   const USERS = {
-    'nuno':   { pass: 'nuno2026',    name: 'Nuno Sousa',    initials: 'NS', role: 'admin'             },
-    'jose':   { pass: 'jose2026',    name: 'José Afonso',   initials: 'JA', role: 'comercial_interno' },
-    'raquel': { pass: 'raquel2026',  name: 'Raquel Moreira',initials: 'RM', role: 'administrativo'    },
-    'tecnico':{ pass: 'tecnico2026', name: 'Técnico',       initials: 'TO', role: 'tecnico'           },
+    'nuno':   { pass: '', name: 'Nuno Sousa',    initials: 'NS', role: 'admin'             },
+    'jose':   { pass: '', name: 'José Afonso',   initials: 'JA', role: 'comercial_interno' },
+    'raquel': { pass: '', name: 'Raquel Moreira',initials: 'RM', role: 'administrativo'    },
+    'tecnico':{ pass: '', name: 'Técnico',       initials: 'TO', role: 'tecnico'           },
   };
 
   const ALL_TABS = ['cfg','tools','crm','fin'];
